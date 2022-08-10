@@ -23,6 +23,11 @@ public class ToDoController {
         return new ResponseEntity<>(service.findAll(), HttpStatus.OK);
     }
 
+    @GetMapping("/todo/{id}")
+    ResponseEntity<ToDo> getToDo(@PathVariable long id){
+        return new ResponseEntity<>(service.findById(id), HttpStatus.OK);
+    }
+
     @PostMapping("/todo")
     ResponseEntity<ToDo> create(@RequestBody ToDo toDo){
         return new ResponseEntity<>(service.save(toDo), HttpStatus.CREATED);
@@ -33,8 +38,19 @@ public class ToDoController {
         return new ResponseEntity<>(service.saveAll(toDos), HttpStatus.CREATED);
     }
 
-    @GetMapping("/todo/{id}")
-    ResponseEntity<ToDo> getToDo(@PathVariable long id){
-        return new ResponseEntity<>(service.findById(id), HttpStatus.OK);
+    @PutMapping("/todo")
+    ResponseEntity<ToDo> update(@RequestBody ToDo toDo){
+        return new ResponseEntity<>(service.save(toDo), HttpStatus.NO_CONTENT);
+    }
+
+    @PutMapping("/todos")
+    ResponseEntity<List<ToDo>> update(@RequestBody List<ToDo> toDos){
+        return new ResponseEntity<>(service.saveAll(toDos), HttpStatus.NO_CONTENT);
+    }
+
+    @DeleteMapping("todo/{id}")
+    ResponseEntity delete(@PathVariable long id){
+        service.deleteById(id);
+        return ResponseEntity.noContent().build();
     }
 }

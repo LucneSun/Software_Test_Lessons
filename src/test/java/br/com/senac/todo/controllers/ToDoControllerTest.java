@@ -22,6 +22,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.doNothing;
+import static org.mockito.Mockito.mock;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
@@ -65,4 +67,33 @@ public class ToDoControllerTest {
         var resultActions = mockMvc.perform(post("/todo").contentType(MediaType.APPLICATION_JSON).content(jsonToDo));
         resultActions.andExpect(status().isCreated()).andExpect(content().json(jsonToDo)).andExpect(jsonPath("$.description").value("Entrar em férias"));
     }
+
+    @Test
+    void editToDo() throws Exception {
+        var toDo = new ToDo(1L, "Entrar em férias", false);
+        Mockito.when(toDoService.save(any(ToDo.class))).thenReturn(toDo);
+
+        var mapper = new ObjectMapper();
+        var jsonToDo = mapper.writeValueAsString(toDo);
+
+        var resultActions = mockMvc.perform(
+                post("/todo")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(jsonToDo)
+        );
+
+        resultActions
+                .andExpect(status().isCreated())
+                .andExpect(content().json(jsonToDo))
+                .andExpect(jsonPath("$.description").value("Entrar em férias"));
+    }
+    @Test
+    void deleteToDo() throws Exception{
+        var toDoServiceMock = mock(ToDoService.class);
+        doNothing().when(toDoServiceMock).deleteById(any(Long.class));
+
+        mockMvc.perform(delete("/todo/1").contentType(MediaType.APPLICATION_JSON)).andExpect(status().isNoContent());
+
+    }
+
 }

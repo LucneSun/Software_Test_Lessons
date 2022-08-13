@@ -31,7 +31,7 @@ public class TestWebBrowser {
     }
 
     @Test
-    void seach(){
+    void search(){
         driver.get("https://www.google.com.br");
 
         searchBox = driver.findElement(By.cssSelector("[name='q']"));
@@ -71,6 +71,37 @@ public class TestWebBrowser {
 
         // assertTrue(searchResults.isDisplayed());
        // assertThat(driver.getTitle().startsWith("Senac Rio"));
+    }
+
+    @Test
+    void searchYoutube(){
+        driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(10));
+        driver.get("https://www.youtube.com");
+        driver.manage().window().maximize();
+
+        searchBox = driver.findElement(By.id("search-input"));
+        //pegar elemento
+        searchBox.click();
+
+        searchBox = driver.findElement(By.cssSelector("[name='search_query']"));
+        searchBox.sendKeys("ost ff12 zodiac age");
+
+        searchBox.submit();
+
+        searchBox = driver.findElement(By.id("search-icon-legacy"));
+        searchBox.click();
+
+        searchBox = driver.findElement(By.id("video-title"));
+        searchBox.click();
+
+
+       // searchResults = driver.findElement(By.className("turma-item"));
+      //  assertTrue(searchResults.isDisplayed());
+       // assertThat(driver.getTitle().startsWith("Turma 2022.3"));
+
+
+        // assertTrue(searchResults.isDisplayed());
+        // assertThat(driver.getTitle().startsWith("Senac Rio"));
     }
 
 }
